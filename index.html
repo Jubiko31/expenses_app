@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>Accounting</title>
+</head>
+<body>
+    <main id="main-content">
+        <section id="content">
+            <div id="title">
+                <h1>Keeping track of my expanses</h1>
+            </div>
+            <div id="input-field">
+                <div id="shop">
+                    <p>Where it was spent:</p>
+                    <input type="text" id="shop-input" placeholder="Where was it spent">
+                </div>
+                <div id="amount">
+                    <p>How much was spent:</p>
+                    <input type="text" id="amount-input" placeholder="How much was spent">
+                </div>
+                <div id="btn-container">
+                    <button onclick="addNewExpense()" id="add" type="sumbit">Add</button>
+                </div>  
+            </div>
+                <div id="total">
+                    <!-- <p>Total</p> -->
+                </div>
+            <div class="expenses-container">
+        <!-- Here will be added all data -->
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

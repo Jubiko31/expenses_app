@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,300;1,400;1,500;1,700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
+
+:root {
+    --bg-color: #657580;
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+}
+
+#content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+#title {
+    font-size: 24px;
+}
+
+#input-field {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+p {
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#shop-input {
+    margin-top: -2px;
+    margin-right: 15px;
+    padding: 15px;
+    width: 350px;
+    border: 1px solid white;
+    border-radius: 8px;
+} 
+
+#amount-input {
+    margin-top: -2px;
+    margin-right: 15px;
+    padding: 15px;
+    width: 180px;
+    border: 1px solid white;
+    border-radius: 8px;
+}
+
+#add {
+    font-size: 16px;
+    font-weight: 300;
+    padding: 15px;
+    width: 110px;
+    margin-left: 10px;
+    margin-top: 44px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #4b8569;
+    transition: 0.3s;
+}
+
+#add:hover {
+    background-color: rgba(75,133,105,0.7)
+}
+
+#total {
+    margin-left: 24%;
+}
+#total > p {
+    font-size: 24px;
+}
+
+.list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.list p {
+    font-size: 24px;
+}
+
+.shop {
+    margin-right: 150px;
+    font-weight: 400;
+
+}
+.date {
+    margin-right: 50px;
+    margin-left: auto;
+}
+.amount {
+    margin-right: 50px;
+}
+
+.list > img {
+    margin-top: 18px;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.editBtn {
+    color: #fff;
+    background-color: #fc6a03 !important;
+}
+.editBtn:hover {
+    background-color: orangered !important;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+      background-color: #e2f3ff;
+    }
+
+    #content {
+        margin-top: 10%;
+    }
+    
+    #title {
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    #input-field {
+        display: flex;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    
+    p {
+        font-size: 14px;
+        font-weight: 300;
+        margin-left: 19px;
+    }
+    
+    #shop-input {
+        margin-top: -2px;
+        margin-right: 15px;
+        margin-left: 15px;
+        padding: 12px;
+        width: 300px;
+        border: 1px solid white;
+        border-radius: 8px;
+    } 
+    
+    #amount-input {
+        margin-top: -2px;
+        margin-right: 15px;
+        margin-left: 15px;
+        padding: 12px;
+        width: 300px;
+        border: 1px solid white;
+        border-radius: 8px;
+    }
+    
+    #add {
+        background-color: #79caab;
+        font-size: 14px;
+        font-weight: 300;
+        padding: 9px;
+        width: 100px;
+        float: right;
+        margin-top: 10px;
+        margin-right: 20px;
+        border-radius: 5px;
+    }
+    
+    .total {
+        float: right;
+        font-size: 2px;
+        margin-left: 120px;
+    }
+    .total > p {
+        font-size: 21px;
+    }
+    
+    .list {
+        display: grid;
+        grid-template-columns: auto; 
+    }
+    
+    .list p {
+        font-size: 20px;
+    }
+    
+    .shop {
+        margin-left: 10px;
+        grid-row-start: 1;
+        grid-row-end: 3;
+    }
+    .date {
+        font-size: 18px !important;
+        margin-right: 18px;
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+    .amount {
+        font-size: 18px !important;
+        margin-top: 0;
+        margin-left: 46px;
+        grid-row-start: 2;
+        grid-row-end: 2;
+    }
+    
+    .list > img {
+        margin-top: 2px;
+        margin-right: 0px;
+        width: 30px;
+        height: 30px;
+    }
+    .edit {
+        margin-left: 130%;
+
+    }
+    .delete {
+        margin-left: 59%;
+    }
+  }
