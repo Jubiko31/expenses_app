@@ -29,11 +29,23 @@ window.onload = () => {
   fetchAPI();
 }
 
-// POST new expenese
-document.getElementById('add').addEventListener('click', async function addNewExpense() {
+const addNewExpense = async () => {
   const shopValue = document.getElementById('shop-input').value;
   const priceValue = document.getElementById('amount-input').value;
+  const errorValue = document.getElementById('error-display');
+  const successValue = document.getElementById('success');
+  
   try {
+    if(!shopValue || !priceValue) {
+      successValue.style.display = 'none';
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'Name or price is not defined';
+    }
+    if(priceValue < 0 || isNaN(priceValue)) {
+      successValue.style.display = 'none';
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'Price should be a positive number';
+    }
     const fetchResponse = await fetch(API, {
       method: 'POST',
       headers: {
@@ -48,9 +60,17 @@ document.getElementById('add').addEventListener('click', async function addNewEx
     if (Array.isArray(res)) {
       expensesContainer.innerHTML = '';
       fetchAPI();
+      errorValue.style.display = 'none';
+      successValue.style.display = 'block';
+      successValue.innerText = 'New instance has been added.';
+      setTimeout(() => {       
+        successValue.style.display = 'none';
+      }, 2000);
       document.getElementById('shop-input').value = null;
       document.getElementById('amount-input').value = null;
-
-    } else alert(res.answer);
+    }
   } catch (res) { /* catch error */ }
-});
+}
+
+const addBtn = document.getElementById('add');
+addBtn.addEventListener('click', addNewExpense);
