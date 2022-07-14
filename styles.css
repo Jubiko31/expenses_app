@@ -122,6 +122,13 @@ p {
     background-color: orangered !important;
 }
 
+#error-display {
+    font-weight: 400;
+    text-align:center;
+    color: #900d09;
+    display: none;
+}
+
 @media only screen and (max-width: 600px) {
     body {
       background-color: #e2f3ff;
