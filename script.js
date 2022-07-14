@@ -15,7 +15,7 @@ const getAllExpenses = (data) => {
     <p class="shop">Shop "${data.name}"</p>
     <p class="date">${data.updatedAt}</p>
     <p class="amount">$ ${data.price}</p>
-    <img id="${data.id}" onClick="updateInstanceById()" class="edit" src="https://img.icons8.com/ios-glyphs/30/000000/edit--v1.png"/>
-    <img id="${data.id}" onClick="deleteExpanse()" class="delete" src="https://img.icons8.com/external-kosonicon-solid-kosonicon/48/000000/external-bin-cleaning-kosonicon-solid-kosonicon.png"/> 
+    <img id="${data.id}" class="edit" src="https://img.icons8.com/ios-glyphs/30/000000/edit--v1.png"/>
+    <img id="${data.id}" class="delete" src="https://img.icons8.com/external-kosonicon-solid-kosonicon/48/000000/external-bin-cleaning-kosonicon-solid-kosonicon.png"/> 
     </div>`;
 };
