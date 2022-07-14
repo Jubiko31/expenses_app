@@ -5,12 +5,12 @@ const fetchAPI = async () => {
   const url = await fetch(API);
   const res = await url.json();
   res.forEach((element) => {
-    const listEl = getAllExpenses(element);
+    const listEl = renderExpense(element);
     expensesContainer.append(listEl);
   });
 }
 
-const getAllExpenses = (data) => {
+const renderExpense = (data) => {
   const { id, name, price, createdAt } = data;
   const list = document.createElement('div');
   list.setAttribute("class", "list");
