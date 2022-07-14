@@ -28,3 +28,29 @@ const renderExpense = (data) => {
 window.onload = () => {
   fetchAPI();
 }
+
+// POST new expenese
+document.getElementById('add').addEventListener('click', async function addNewExpense() {
+  const shopValue = document.getElementById('shop-input').value;
+  const priceValue = document.getElementById('amount-input').value;
+  try {
+    const fetchResponse = await fetch(API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: shopValue,
+        price: priceValue,
+      }),
+    });
+    const res = await fetchResponse.json();
+    if (Array.isArray(res)) {
+      expensesContainer.innerHTML = '';
+      fetchAPI();
+      document.getElementById('shop-input').value = null;
+      document.getElementById('amount-input').value = null;
+
+    } else alert(res.answer);
+  } catch (res) { /* catch error */ }
+});
