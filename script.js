@@ -59,7 +59,10 @@ const addNewExpense = async () => {
     const res = await fetchResponse.json();
     if (Array.isArray(res)) {
       expensesContainer.innerHTML = '';
-      fetchAPI();
+      res.forEach(element => {
+        const listElement = renderExpense(element);
+        expensesContainer.append(listElement);
+      })
       errorValue.style.display = 'none';
       successValue.style.display = 'block';
       successValue.innerText = 'New instance has been added.';
