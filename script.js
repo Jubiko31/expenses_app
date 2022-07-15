@@ -93,7 +93,6 @@ const deleteExpenseById = async (id) => {
   try {
   const URL = `${API}/${id}`;
   expensesContainer.innerHTML = '';
-  console.log(URL)
   const fetchedData = await fetch(URL, deleteMethod);
   const response = await fetchedData.json();
 
