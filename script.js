@@ -22,6 +22,10 @@ const renderExpense = (data) => {
     <img class="delete" src="https://img.icons8.com/external-kosonicon-solid-kosonicon/48/000000/external-bin-cleaning-kosonicon-solid-kosonicon.png"/> 
     `;
 
+  list.querySelector('.delete').addEventListener('click', () => {
+    deleteExpenseById(id)
+  })
+
   return list;
 };
 
@@ -77,3 +81,31 @@ const addNewExpense = async () => {
 
 const addBtn = document.getElementById('add');
 addBtn.addEventListener('click', addNewExpense);
+
+const deleteMethod = {
+  method: 'DELETE',
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+};
+
+const deleteExpenseById = async (id) => {
+  try {
+  const URL = `${API}/${id}`;
+  expensesContainer.innerHTML = '';
+  console.log(URL)
+  const fetchedData = await fetch(URL, deleteMethod);
+  const response = await fetchedData.json();
+
+  if (response) {
+    response.forEach((element) => {
+      const listElement = renderExpense(element);
+      expensesContainer.append(listElement);
+    });
+  }
+ }
+ catch(error) {
+  errorValue.style.display = 'block';
+  return errorValue.innerHTML = error;
+ }
+};
