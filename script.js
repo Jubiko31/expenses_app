@@ -82,18 +82,16 @@ const addNewExpense = async () => {
 const addBtn = document.getElementById('add');
 addBtn.addEventListener('click', addNewExpense);
 
-const deleteMethod = {
-  method: 'DELETE',
-  headers: {
-    'Content-type': 'application/json; charset=UTF-8',
-  },
-};
-
 const deleteExpenseById = async (id) => {
   try {
   const URL = `${API}/${id}`;
   expensesContainer.innerHTML = '';
-  const fetchedData = await fetch(URL, deleteMethod);
+  const fetchedData = await fetch(URL, {
+    method: 'DELETE',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  });
   const response = await fetchedData.json();
 
   if (response) {
