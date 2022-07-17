@@ -1,5 +1,6 @@
 const expensesContainer = document.querySelector('.expenses-container');
 const API = 'http://localhost:3000/api/list';
+let totalAmount = 0;
 
 const fetchAPI = async () => {
   const url = await fetch(API);
@@ -12,6 +13,8 @@ const fetchAPI = async () => {
 
 const renderExpense = (data) => {
   const { id, name, price, createdAt } = data;
+  totalAmount += Number(price);
+  document.getElementById('total-amount').innerText = totalAmount;
   const list = document.createElement('div');
   list.setAttribute("class", "list");
   list.innerHTML = `
@@ -62,6 +65,7 @@ const addNewExpense = async () => {
     });
     const res = await fetchResponse.json();
     if (Array.isArray(res)) {
+      totalAmount = 0;
       expensesContainer.innerHTML = '';
       res.forEach(element => {
         const listElement = renderExpense(element);
@@ -95,6 +99,7 @@ const deleteExpenseById = async (id) => {
   const response = await fetchedData.json();
 
   if (response) {
+    totalAmount = 0;
     response.forEach((element) => {
       const listElement = renderExpense(element);
       expensesContainer.append(listElement);
@@ -106,3 +111,70 @@ const deleteExpenseById = async (id) => {
   return errorValue.innerHTML = error;
  }
 };
+
+const updateInstanceById = async (id, name, price, nameField, priceField, editBtn) => {
+  const errorValue = document.getElementById('error-display');
+  const successValue = document.getElementById('success');
+  const shopInputField = document.createElement('input');
+  const priceInputField = document.createElement('input');
+  const checkBtn = document.createElement('img');
+  nameField.parentNode.replaceChild(shopInputField, nameField);
+  priceField.parentNode.replaceChild(priceInputField, priceField);
+  editBtn.parentNode.replaceChild(checkBtn, editBtn)
+  checkBtn.src = 'https://img.icons8.com/color/48/000000/checked--v1.png';
+  shopInputField.value = name;
+  priceInputField.value = price;
+  shopInputField.classList.add('edit-input-name');
+  priceInputField.classList.add('edit-input-price');
+  let editedShopValue = shopInputField.value;
+  let editedPriceValue = priceInputField.value;
+  shopInputField.addEventListener('change', (e) => {
+    editedShopValue = e.target.value.trim();
+  });
+  priceInputField.addEventListener('change', (e) => {
+    editedPriceValue = e.target.value;
+  });
+  const update = async () => {
+  try {
+    if (!editedShopValue && !editedPriceValue) {
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'At least one input should be changed';
+    } 
+    if(editedPriceValue < 0 || isNaN(editedPriceValue)) {
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'Edited price must be a positive number.';
+    }
+    const URL = `${API}/${id}`;
+    expensesContainer.innerHTML = '';
+    const fetchedData = await fetch(URL, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: editedShopValue,
+        price: editedPriceValue
+      })
+    });
+    const response = await fetchedData.json();
+    if (response) {
+      response.forEach((element) => {
+        totalAmount = 0;
+        const listElement = renderExpense(element);
+        expensesContainer.append(listElement);
+        errorValue.style.display = 'none';
+        successValue.style.display = 'block';
+        successValue.innerText = 'One expense has been changed.';
+        setTimeout(() => {       
+          successValue.style.display = 'none';
+        }, 2000);
+      });
+    }
+   }
+   catch(error) {
+    errorValue.style.display = 'block';
+    return errorValue.innerHTML = error;
+   }
+  }
+  checkBtn.addEventListener('click', update);
+}
