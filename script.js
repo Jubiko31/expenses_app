@@ -109,12 +109,12 @@ const deleteExpenseById = async (id) => {
   expensesContainer.innerHTML = '';
   const fetchedData = await fetchWithoutBody('DELETE', id);
   const response = await fetchedData.json();
-  if (response) {
+  if (response.length) {
     response.forEach((element) => {
       const listElement = renderExpense(element);
       expensesContainer.append(listElement);
     });
-  }
+  };
  }
  catch(error) {
   errorValue.style.display = 'block';
@@ -158,11 +158,9 @@ const updateInstanceById = async (updateValues) => {
       return errorValue.innerHTML = 'Edited price must be a positive number.';
     }
     if (editedShopValue !== name) {
-      console.log(editedShopValue)
       valuesToUpdate.name = editedShopValue;
     }
     if (editedPriceValue !== price) {
-      console.log(editedPriceValue)
       valuesToUpdate.price = editedPriceValue;
     }
     if (Object.keys(valuesToUpdate).length === 0) {
@@ -176,7 +174,6 @@ const updateInstanceById = async (updateValues) => {
       }
     }
     expensesContainer.innerHTML = '';
-    console.log(valuesToUpdate)
     const fetchedData = await fetchWithBody('PATCH', valuesToUpdate ,id);
     const response = await fetchedData.json();
     if (response) {
@@ -195,7 +192,7 @@ const updateInstanceById = async (updateValues) => {
    catch(error) {
     errorValue.style.display = 'block';
     return errorValue.innerHTML = error;
-   }
+   }t;
   }
   checkBtn.addEventListener('click', update);
 }
