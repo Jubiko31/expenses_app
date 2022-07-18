@@ -21,6 +21,7 @@ const fetchWithoutBody = async (method, id) => {
   });
 };
 let updateValues;
+let totalAmount = 0;
 
 const fetchAPI = async () => {
   const url = await fetchWithoutBody('GET');
@@ -29,10 +30,13 @@ const fetchAPI = async () => {
     const listEl = renderExpense(element);
     expensesContainer.append(listEl);
   });
+  document.getElementById('total-amount').innerText = totalAmount;
 }
 
 const renderExpense = (data) => {
   const { id, name, price, createdAt } = data;
+  totalAmount += Number(price);
+
   const list = document.createElement('div');
   list.setAttribute("class", "list");
   list.innerHTML = `
@@ -84,6 +88,7 @@ const addNewExpense = async () => {
     });
     const res = await fetchResponse.json();
     if (Array.isArray(res)) {
+      totalAmount = 0;
       expensesContainer.innerHTML = '';
       res.forEach(element => {
         const listElement = renderExpense(element);
@@ -99,6 +104,7 @@ const addNewExpense = async () => {
       document.getElementById('amount-input').value = null;
     }
   } catch (res) { /* catch error */ }
+  document.getElementById('total-amount').innerText = totalAmount;
 }
 
 const addBtn = document.getElementById('add');
@@ -110,16 +116,19 @@ const deleteExpenseById = async (id) => {
   const fetchedData = await fetchWithoutBody('DELETE', id);
   const response = await fetchedData.json();
   if (response.length) {
+    totalAmount = 0;
     response.forEach((element) => {
       const listElement = renderExpense(element);
       expensesContainer.append(listElement);
     });
-  };
+  }
+  else totalAmount = 0;
  }
  catch(error) {
   errorValue.style.display = 'block';
   return errorValue.innerHTML = error;
  }
+ document.getElementById('total-amount').innerText = totalAmount;
 };
 
 const updateInstanceById = async (updateValues) => {
@@ -177,6 +186,7 @@ const updateInstanceById = async (updateValues) => {
     const fetchedData = await fetchWithBody('PATCH', valuesToUpdate ,id);
     const response = await fetchedData.json();
     if (response) {
+      totalAmount = 0;
       response.forEach((element) => {
         const listElement = renderExpense(element);
         expensesContainer.append(listElement);
@@ -192,7 +202,8 @@ const updateInstanceById = async (updateValues) => {
    catch(error) {
     errorValue.style.display = 'block';
     return errorValue.innerHTML = error;
-   }t;
+   }
+   document.getElementById('total-amount').innerText = totalAmount;
   }
   checkBtn.addEventListener('click', update);
 }
