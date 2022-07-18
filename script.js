@@ -1,10 +1,29 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-return-assign */
 const expensesContainer = document.querySelector('.expenses-container');
 const API = 'http://localhost:3000/api/list';
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+const fetchWithBody = async (method, body, id) => {
+  const URL = id ? `${API}/${id}` : API;
+  return fetch(URL, {
+      method,
+      headers,
+      body: JSON.stringify(body),
+  });
+};
+
+const fetchWithoutBody = async (method, id) => {
+  const URL = id ? `${API}/${id}` : API;
+  return fetch(URL, {
+      method,
+      headers,
+  });
+};
+let updateValues;
 
 const fetchAPI = async () => {
-  const url = await fetch(API);
+  const url = await fetchWithoutBody('GET');
   const res = await url.json();
   res.forEach((element) => {
     const listEl = renderExpense(element);
@@ -24,9 +43,7 @@ const renderExpense = (data) => {
     <img class="delete" src="https://img.icons8.com/external-kosonicon-solid-kosonicon/48/000000/external-bin-cleaning-kosonicon-solid-kosonicon.png"/> 
     `;
 
-  list.querySelector('.delete').addEventListener('click', () => {
-    deleteExpenseById(id)
-  })
+  list.querySelector('.delete').addEventListener('click', () => deleteExpenseById(id))
 
   const editBtn = list.querySelector('.edit');
   editBtn.addEventListener('click', () => {
@@ -34,7 +51,8 @@ const renderExpense = (data) => {
     const name = nameField.innerText.substr(6).slice(0,-1);
     const priceField = list.querySelector('.amount')
     const price = priceField.innerText.substring(2);
-    updateInstanceById(id, name, price, nameField, priceField, editBtn)
+    updateValues = { id, name, price, nameField, priceField, editBtn };
+    updateInstanceById(updateValues)
   })
   return list;
 };
@@ -60,15 +78,9 @@ const addNewExpense = async () => {
       errorValue.style.display = 'block';
       return errorValue.innerHTML = 'Price should be a positive number';
     }
-    const fetchResponse = await fetch(API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const fetchResponse = await fetchWithBody('POST', {
         name: shopValue,
         price: priceValue,
-      }),
     });
     const res = await fetchResponse.json();
     if (Array.isArray(res)) {
@@ -94,16 +106,9 @@ addBtn.addEventListener('click', addNewExpense);
 
 const deleteExpenseById = async (id) => {
   try {
-  const URL = `${API}/${id}`;
   expensesContainer.innerHTML = '';
-  const fetchedData = await fetch(URL, {
-    method: 'DELETE',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  });
+  const fetchedData = await fetchWithoutBody('DELETE', id);
   const response = await fetchedData.json();
-
   if (response) {
     response.forEach((element) => {
       const listElement = renderExpense(element);
@@ -117,12 +122,14 @@ const deleteExpenseById = async (id) => {
  }
 };
 
-const updateInstanceById = async (id, name, price, nameField, priceField, editBtn) => {
+const updateInstanceById = async (updateValues) => {
+  const { id, name, price, nameField, priceField, editBtn } = updateValues
   const errorValue = document.getElementById('error-display');
   const successValue = document.getElementById('success');
   const shopInputField = document.createElement('input');
   const priceInputField = document.createElement('input');
   const checkBtn = document.createElement('img');
+  const valuesToUpdate = {};
   nameField.parentNode.replaceChild(shopInputField, nameField);
   priceField.parentNode.replaceChild(priceInputField, priceField);
   editBtn.parentNode.replaceChild(checkBtn, editBtn)
@@ -131,14 +138,15 @@ const updateInstanceById = async (id, name, price, nameField, priceField, editBt
   priceInputField.value = price;
   shopInputField.classList.add('edit-input-name');
   priceInputField.classList.add('edit-input-price');
-  let editedShopValue = shopInputField.value;
-  let editedPriceValue = priceInputField.value;
-  shopInputField.addEventListener('change', (e) => {
-    editedShopValue = e.target.value.trim();
+  let editedShopValue = name;
+  let editedPriceValue = price;
+  shopInputField.addEventListener('change', ({target}) => {
+    editedShopValue = target.value.trim();
   });
-  priceInputField.addEventListener('change', (e) => {
-    editedPriceValue = e.target.value;
+  priceInputField.addEventListener('change', ({target}) => {
+    editedPriceValue = target.value;
   });
+
   const update = async () => {
   try {
     if (!editedShopValue && !editedPriceValue) {
@@ -149,18 +157,27 @@ const updateInstanceById = async (id, name, price, nameField, priceField, editBt
       errorValue.style.display = 'block';
       return errorValue.innerHTML = 'Edited price must be a positive number.';
     }
-    const URL = `${API}/${id}`;
+    if (editedShopValue !== name) {
+      console.log(editedShopValue)
+      valuesToUpdate.name = editedShopValue;
+    }
+    if (editedPriceValue !== price) {
+      console.log(editedPriceValue)
+      valuesToUpdate.price = editedPriceValue;
+    }
+    if (Object.keys(valuesToUpdate).length === 0) {
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'Nothing changed. Invalid Input';
+    }
+    if (Object.keys(valuesToUpdate).length === 1) {
+      if (valuesToUpdate.name === "" || valuesToUpdate.price === "") {
+      errorValue.style.display = 'block';
+      return errorValue.innerHTML = 'Nothing changed. Invalid Input';
+      }
+    }
     expensesContainer.innerHTML = '';
-    const fetchedData = await fetch(URL, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: editedShopValue,
-        price: editedPriceValue
-      })
-    });
+    console.log(valuesToUpdate)
+    const fetchedData = await fetchWithBody('PATCH', valuesToUpdate ,id);
     const response = await fetchedData.json();
     if (response) {
       response.forEach((element) => {
