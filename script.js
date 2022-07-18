@@ -21,7 +21,6 @@ const fetchWithoutBody = async (method, id) => {
   });
 };
 let updateValues;
-let totalAmount = 0;
 
 const fetchAPI = async () => {
   const url = await fetchWithoutBody('GET');
@@ -34,8 +33,6 @@ const fetchAPI = async () => {
 
 const renderExpense = (data) => {
   const { id, name, price, createdAt } = data;
-  totalAmount += Number(price);
-  document.getElementById('total-amount').innerText = totalAmount;
   const list = document.createElement('div');
   list.setAttribute("class", "list");
   list.innerHTML = `
@@ -87,7 +84,6 @@ const addNewExpense = async () => {
     });
     const res = await fetchResponse.json();
     if (Array.isArray(res)) {
-      totalAmount = 0;
       expensesContainer.innerHTML = '';
       res.forEach(element => {
         const listElement = renderExpense(element);
@@ -114,7 +110,6 @@ const deleteExpenseById = async (id) => {
   const fetchedData = await fetchWithoutBody('DELETE', id);
   const response = await fetchedData.json();
   if (response) {
-    totalAmount = 0;
     response.forEach((element) => {
       const listElement = renderExpense(element);
       expensesContainer.append(listElement);
@@ -185,7 +180,6 @@ const updateInstanceById = async (updateValues) => {
     const fetchedData = await fetchWithBody('PATCH', valuesToUpdate ,id);
     const response = await fetchedData.json();
     if (response) {
-      totalAmount = 0;
       response.forEach((element) => {
         const listElement = renderExpense(element);
         expensesContainer.append(listElement);
