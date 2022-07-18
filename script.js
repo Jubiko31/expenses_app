@@ -30,12 +30,13 @@ const fetchAPI = async () => {
     const listEl = renderExpense(element);
     expensesContainer.append(listEl);
   });
+  document.getElementById('total-amount').innerText = totalAmount;
 }
 
 const renderExpense = (data) => {
   const { id, name, price, createdAt } = data;
   totalAmount += Number(price);
-  document.getElementById('total-amount').innerText = totalAmount;
+
   const list = document.createElement('div');
   list.setAttribute("class", "list");
   list.innerHTML = `
@@ -103,6 +104,7 @@ const addNewExpense = async () => {
       document.getElementById('amount-input').value = null;
     }
   } catch (res) { /* catch error */ }
+  document.getElementById('total-amount').innerText = totalAmount;
 }
 
 const addBtn = document.getElementById('add');
@@ -113,18 +115,20 @@ const deleteExpenseById = async (id) => {
   expensesContainer.innerHTML = '';
   const fetchedData = await fetchWithoutBody('DELETE', id);
   const response = await fetchedData.json();
-  if (response) {
+  if (response.length) {
     totalAmount = 0;
     response.forEach((element) => {
       const listElement = renderExpense(element);
       expensesContainer.append(listElement);
     });
   }
+  else totalAmount = 0;
  }
  catch(error) {
   errorValue.style.display = 'block';
   return errorValue.innerHTML = error;
  }
+ document.getElementById('total-amount').innerText = totalAmount;
 };
 
 const updateInstanceById = async (updateValues) => {
@@ -163,11 +167,9 @@ const updateInstanceById = async (updateValues) => {
       return errorValue.innerHTML = 'Edited price must be a positive number.';
     }
     if (editedShopValue !== name) {
-      console.log(editedShopValue)
       valuesToUpdate.name = editedShopValue;
     }
     if (editedPriceValue !== price) {
-      console.log(editedPriceValue)
       valuesToUpdate.price = editedPriceValue;
     }
     if (Object.keys(valuesToUpdate).length === 0) {
@@ -181,7 +183,6 @@ const updateInstanceById = async (updateValues) => {
       }
     }
     expensesContainer.innerHTML = '';
-    console.log(valuesToUpdate)
     const fetchedData = await fetchWithBody('PATCH', valuesToUpdate ,id);
     const response = await fetchedData.json();
     if (response) {
@@ -202,6 +203,7 @@ const updateInstanceById = async (updateValues) => {
     errorValue.style.display = 'block';
     return errorValue.innerHTML = error;
    }
+   document.getElementById('total-amount').innerText = totalAmount;
   }
   checkBtn.addEventListener('click', update);
 }
