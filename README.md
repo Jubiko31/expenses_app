@@ -1,4 +1,4 @@
-#Expenses tracker - keep track your budget
+#Expenses tracker - keep track of your budget
 
 CRUD application, using NodeJS + Express, PostgreSQL
 This is the only Front-end part, you can view server part here: https://github.com/Jubiko31/expanses_server
